@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http'; 
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,7 +14,13 @@ export const appConfig: ApplicationConfig = {
       withHttpTransferCacheOptions({
         includePostRequests: true,
       }),
-    ),    provideHttpClient(withFetch()), 
-    provideAnimations()
+    ),    
+    provideHttpClient(withFetch()), 
+    provideAnimations(),
+    provideToastr({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }), 
   ]
 };

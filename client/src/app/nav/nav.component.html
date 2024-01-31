@@ -1,22 +1,34 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="#">Dating App</a>
+    <a class="navbar-brand" routerLink="/home" routerLinkActive="active"
+      >Dating App</a
+    >
 
-    @if(accountService.currentUser$ | async) {
+    @if(accountService.currentUser$ | async; as user) {
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
-      <li class="nav-item">
-        <a class="nav-link" href="#">Matches</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Lists</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
-      </li>
+      <ng-container>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/members" routerLinkActive="active"
+            >Matches</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/lists" routerLinkActive="active"
+            >Lists</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/messages" routerLinkActive="active"
+            >Messages</a
+          >
+        </li>
+      </ng-container>
     </ul>
 
     <div class="dropdown" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle>Welcome user</a>
+      <a class="dropdown-toggle text-light" dropdownToggle
+        >Welcome {{ user.username | titlecase }}</a
+      >
       <div class="dropdown-menu" *dropdownMenu>
         <a class="dropdown-item">Edit Profile</a>
         <a class="dropdown-item" (click)="logout()">Logout</a>
@@ -43,7 +55,9 @@
         type="password"
         placeholder="Password"
       />
-      <button class="btn btn-outline-success" type="submit">Login</button>
+      <button class="btn btn-success" type="secondary">
+        <span class="text-secondary">Login</span>
+      </button>
     </form>
     }
   </div>
