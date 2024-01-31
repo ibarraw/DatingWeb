@@ -1,45 +1,33 @@
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+//import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './nav/nav.component';
+import { AccountService } from './_services/account.service';
+import { User } from './_models/user';
+import { HomeComponent } from './home/home.component';
 
-interface User {
-  id: number;
-  userName: string;
-}
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HttpClientModule],
+  imports: [ NavComponent, HomeComponent], //RouterOutlet, 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
 export class AppComponent implements OnInit {
-  title = 'Your Angular App';
-  users: any;
+  title = 'Dating App';
 
-  constructor(private http: HttpClient) {}
+  constructor(private accountService: AccountService) {}
 
-ngOnInit(): void {
-    const apiUrl = 'https://localhost:5001/api/users';
-
-    this.http.get<User[]>(apiUrl).subscribe({
-      next: (response) => this.users = response,
-      error: (error) => console.log("Error:", error), // Improved error logging
-      complete: () => console.log("Fetch complete")
-    });
+  ngOnInit(): void {
+    this.setCurrentUser();
   }
 
-  // fetchUsers() {      
-  //   console.log("found");
+  setCurrentUser() {
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
 
-  //   // const apiUrl = 'https://localhost:5001/api/users';
-
-  //   // this.http.get(apiUrl).subscribe({
-  //   //   next: response => this.users = response,
-  //   //   error: console.log("error"),
-  //   //   complete: () => console.log("complete")
-  //   // })
-  // }
+    const user: User = JSON.parse(userString);
+    this.accountService.setCurrentUser(user);
+  }
 }
