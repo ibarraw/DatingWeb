@@ -21,6 +21,12 @@ export const appConfig: ApplicationConfig = {
       timeOut: 3000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
-    }), 
+    }),
+    // provideHttpClient(withInterceptorsFromDi()),  
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: ErrorInterceptor,
+    //   multi: true,
+    // }, 
   ]
 };

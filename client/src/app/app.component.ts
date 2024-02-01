@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NavComponent } from './nav/nav.component';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 import { HomeComponent } from './home/home.component';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
@@ -17,17 +18,20 @@ import { HomeComponent } from './home/home.component';
 export class AppComponent implements OnInit {
   title = 'Dating App';
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService,   
+    @Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
   }
 
   setCurrentUser() {
-    const userString = localStorage.getItem('user');
-    if (!userString) return;
-
-    const user: User = JSON.parse(userString);
-    this.accountService.setCurrentUser(user);
-  }
+    if (isPlatformBrowser(this.platformId)) {
+      const userString = window.localStorage.getItem('user');
+      if (!userString) return;
+  
+      const user: User = JSON.parse(userString);
+      this.accountService.setCurrentUser(user);
+    }
+  };
 }
