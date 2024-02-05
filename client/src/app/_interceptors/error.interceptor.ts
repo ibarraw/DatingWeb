@@ -1,51 +1,46 @@
-// import { Injectable } from '@angular/core';
-// import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-// import { Observable, throwError } from 'rxjs';
-// import { catchError } from 'rxjs/operators';
-// import { ToastrService } from 'ngx-toastr';
-// import { Router } from '@angular/router';
+import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
-// @Injectable()
-// export class ErrorInterceptor implements HttpInterceptor {
+export const ErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  const router = inject(Router);
+  const toastr = inject(ToastrService);
 
-//   constructor(private router: Router, private toastr: ToastrService) {}
-
-//   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-//     return next.handle(request).pipe(
-//       catchError((error: HttpErrorResponse) => { // Corrected syntax here
-//         if (error) {
-//           switch (error.status) {
-//             case 400:
-//               if (error.error.errors) {
-//                 const modalStateErrors = [];
-//                 for (const key in error.error.errors) {
-//                   if (error.error.errors[key]) {
-//                     modalStateErrors.push(error.error.errors[key]);
-//                   }
-//                 }
-//                 throw modalStateErrors.flat();
-//               } else {
-//                 this.toastr.error(error.statusText, error.status.toString());
-//               }
-//               break;
-//             case 401:
-//               this.toastr.error(error.statusText, error.status.toString());
-//               break;
-//             case 404:
-//               this.router.navigateByUrl('/not-found');
-//               break;
-//             case 500:
-//               const navigationExtras = { state: { error: error.error } };
-//               this.router.navigateByUrl('/server-error', navigationExtras);
-//               break;
-//             default:
-//               //this.toastr.error('Something unexpected went wrong');
-//               console.error(error);
-//               break;
-//           }
-//         }
-//         return throwError(error); // Properly re-throw the error
-//       })
-//     );
-//   }
-// }
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error) {
+        switch (error.status) {
+          case 400:
+            if (error.error.errors) {
+              const modalStateErrors = [];
+              for (const key in error.error.errors) {
+                if (error.error.errors[key]) {
+                  modalStateErrors.push(error.error.errors[key]);
+                }
+              }
+              throw modalStateErrors.flat();
+            } else {
+              toastr.error(error.statusText, error.status.toString());
+            }
+            break;
+          case 401:
+            toastr.error(error.statusText, error.status.toString());
+            break;
+          case 404:
+            router.navigateByUrl('/not-found');
+            break;
+          case 500:
+            const navigationExtras = { state: { error: error.error } };
+            router.navigateByUrl('/server-error', navigationExtras);
+            break;
+          default:
+            console.error(error);
+            break;
+        }
+      }
+      return throwError(error);
+    })
+  );
+};

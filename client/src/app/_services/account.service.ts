@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 
 //Service is a singleton that survives the lifetime of the application
 export class AccountService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
   

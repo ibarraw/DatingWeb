@@ -1,11 +1,14 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http'; 
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'; 
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
+import { GalleryModule } from 'ng-gallery';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,11 +25,10 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-    // provideHttpClient(withInterceptorsFromDi()),  
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: ErrorInterceptor,
-    //   multi: true,
-    // }, 
+    provideHttpClient(withInterceptors([
+      JwtInterceptor,
+      ErrorInterceptor
+    ])),
+    importProvidersFrom(GalleryModule) 
   ]
 };
