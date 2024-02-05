@@ -9,6 +9,8 @@ import { provideToastr } from 'ngx-toastr';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { GalleryModule } from 'ng-gallery';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { loadingInterceptor } from './_interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,8 +29,11 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([
       JwtInterceptor,
-      ErrorInterceptor
+      ErrorInterceptor,
+      loadingInterceptor
     ])),
-    importProvidersFrom(GalleryModule) 
+    importProvidersFrom(GalleryModule), 
+    provideAnimationsAsync(),
+     
   ]
 };

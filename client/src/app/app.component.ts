@@ -4,13 +4,14 @@ import { NavComponent } from './nav/nav.component';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 import { HomeComponent } from './home/home.component';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ NavComponent, HomeComponent, RouterOutlet, RouterLink],
+  imports: [ NavComponent, HomeComponent, RouterOutlet, RouterLink, CommonModule, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
