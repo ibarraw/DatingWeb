@@ -11,6 +11,7 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { GalleryModule } from 'ng-gallery';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { loadingInterceptor } from './_interceptors/loading.interceptor';
+import { FileUploadModule } from 'ng2-file-upload';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     ])),
     importProvidersFrom(GalleryModule), 
     provideAnimationsAsync(),
+    importProvidersFrom(FileUploadModule)
      
   ]
 };

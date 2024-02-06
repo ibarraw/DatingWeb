@@ -8,7 +8,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>,
 
   busyService.busy();
   return next(req).pipe(
-    delay(2000), // Add delay here for testing the spinner visibility
+    delay(1000), // Add delay here for testing the spinner visibility
     finalize(() => busyService.idle())
   );
 };
