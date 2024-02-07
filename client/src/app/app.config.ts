@@ -35,7 +35,9 @@ export const appConfig: ApplicationConfig = {
     ])),
     importProvidersFrom(GalleryModule), 
     provideAnimationsAsync(),
-    importProvidersFrom(FileUploadModule)
+    importProvidersFrom(FileUploadModule),
+    
+    
      
   ]
 };
