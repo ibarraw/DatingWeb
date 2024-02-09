@@ -1,4 +1,5 @@
 ﻿using API.DTO;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -35,13 +36,41 @@ namespace API.Data
             //    }).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            //ProjectTo does not eagerly load related data
-            //However, the performance gain is not significant
-            return await _context.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+            var query = _context.Users
+                                .Where(u => u.UserName != userParams.CurrentUsername &&
+                                            u.Gender == userParams.Gender &&
+                                            u.DateOfBirth >= minDob &&
+                                            u.DateOfBirth <= maxDob)
+                                .AsQueryable(); //Start with filtering the users
+
+            //Apply ordering based on userParams or another criteria
+            switch (userParams.OrderBy)
+            {
+                case "created":
+                    query = query.OrderByDescending(u => u.Created);
+                    break;
+                default:
+                    query = query.OrderByDescending(u => u.LastActive);
+                    break;
+            }
+
+            return await PagedList<MemberDto>
+                .CreateAsync(
+                    query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider),
+                    userParams.PageNumber,
+                    userParams.PageSize
+                );
+
+            ////ProjectTo does not eagerly load related data
+            ////However, the performance gain is not significant
+            //return await _context.Users
+            //    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+            //    .ToListAsync();
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
