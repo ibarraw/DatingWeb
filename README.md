@@ -23,6 +23,12 @@ A demo project by William Ibarra |a full-stack web application with ASP.NET and 
 - **Deployment**: Containerized with Docker and deployed on AWS for scalability and reliability.
 - **Best Practices**: Adhered to industry best practices in structuring Angular applications and ASP.NET API development.
 
+##Key Learnings:
+- **Angular Mastery**: Advanced component creation, reactive forms, routing, HTTP client integration, and state management with observables.
+- **.NET Core Expertise**: Deep understanding of API controllers, middleware, entity relationships, repository pattern, and data seeding.
+- **Security & Performance**: Implemented CSRF protection, optimized pagination, filtering, sorting, and caching strategies for enhanced performance and security.
+- **UI/UX Design**: Leveraged Bootstrap and custom CSS to craft intuitive and responsive user interfaces, incorporating third-party photo galleries for enriched user profiles.
+
 ## Getting Started
 
 ### Prerequisites
