@@ -1,10 +1,18 @@
-import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
-export const ErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+export const ErrorInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+) => {
   const router = inject(Router);
   const toastr = inject(ToastrService);
 
@@ -26,7 +34,9 @@ export const ErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
             }
             break;
           case 401:
-            toastr.error(error.statusText, error.status.toString());
+            //commented out to avoid multiple toasts
+            console.log(error);
+            //toastr.error(error.statusText, error.status.toString());
             break;
           case 404:
             router.navigateByUrl('/not-found');

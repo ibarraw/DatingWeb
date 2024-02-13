@@ -5,9 +5,8 @@ import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 
 //Service is a singleton that survives the lifetime of the application
@@ -15,14 +14,14 @@ export class AccountService {
   baseUrl = environment.apiUrl;
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
-  
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) {}
 
   login(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((response: User) => {
         const user = response;
-        if(user) {
+        if (user) {
           this.setCurrentUser(user);
         }
       })
@@ -32,7 +31,7 @@ export class AccountService {
   register(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
       map((user: User) => {
-        if(user) {
+        if (user) {
           this.setCurrentUser(user);
         }
         return user;
@@ -41,6 +40,10 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? (user.roles = roles) : user.roles.push(roles);
+
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -48,5 +51,9 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1])); //atob is a built-in function to decode base64
   }
 }
