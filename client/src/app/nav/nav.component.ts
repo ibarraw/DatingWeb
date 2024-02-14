@@ -33,7 +33,10 @@ export class NavComponent {
 
   login(): void {
     this.accountService.login(this.model).subscribe({
-      next: () => this.router.navigateByUrl('/members'),
+      next: () => {
+        this.router.navigateByUrl('/members');
+        this.model = {};
+      },
       error: (err) => this.toastr.error(err.error.message),
     });
   }
