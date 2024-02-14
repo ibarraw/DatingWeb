@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouteReuseStrategy, provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import {
@@ -20,6 +20,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { loadingInterceptor } from './_interceptors/loading.interceptor';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CustomerRouteReuseStrategy } from './_services/customRouteReuseStrategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,5 +44,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom(FileUploadModule),
     importProvidersFrom(ModalModule.forRoot()), //.forRoot() is still required for ngx-bootstrap angular 17
+    { provide: RouteReuseStrategy, useClass: CustomerRouteReuseStrategy },
   ],
 };

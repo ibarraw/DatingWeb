@@ -3,6 +3,7 @@ using API.Data;
 using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +20,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
 //app.UseHttpsRedirection();
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(builder => builder
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials() // This is needed for SignalR
+    .WithOrigins("https://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("/hubs/presence");
+app.MapHub<MessageHub>("/hubs/message"); //This is the SignalR hub to send messages to groups
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -34,6 +41,7 @@ try
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
+    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]"); //This is to clear the connections table when the server starts. Not a good idea in production, but simple fix for development
     await Seed.SeedUsers(userManager, roleManager);
 }
 catch (Exception ex)

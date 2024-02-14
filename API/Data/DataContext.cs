@@ -24,6 +24,8 @@ namespace API.Data
         public DbSet<UserLike> Likes { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Connection> Connections { get; set; }
 
         //we are doing this manually instead of using dotnet ef migrations as it will create awkward migrations as of .net 7
         protected override void OnModelCreating(ModelBuilder builder)
