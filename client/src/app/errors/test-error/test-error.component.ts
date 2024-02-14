@@ -1,3 +1,5 @@
+//This code is commented out because it's not being used in the application, but it's a good example of how to handle errors in Angular
+
 // import { HttpClient } from '@angular/common/http';
 // import { Component } from '@angular/core';
 

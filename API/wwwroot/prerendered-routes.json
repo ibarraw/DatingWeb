@@ -1,0 +1,10 @@
+{
+  "routes": [
+    "/",
+    "/admin",
+    "/lists",
+    "/member/edit",
+    "/members",
+    "/messages"
+  ]
+}
